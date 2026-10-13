@@ -4,11 +4,15 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { ProductRepository } from './core/domain/repositories/product.repository';
 import { UserRepository } from './core/domain/repositories/user.repository';
+import { CourseRepository } from './core/domain/repositories/course.repository';
 import { ProductNodeRepositoryImpl } from './core/infrastructure/repositories/node-implementation/product-node.repository.impl';
 import { UserNodeRepositoryImpl } from './core/infrastructure/repositories/node-implementation/user-node.repository.impl';
+import { CourseNodeRepositoryImpl } from './core/infrastructure/repositories/node-implementation/course-node.repository.impl';
 import { UserSpringBootRepositoryImpl } from './core/infrastructure/repositories/springboot-implementation/user-springboot.repository.impl';
+import { CourseSpringBootRepositoryImpl } from './core/infrastructure/repositories/springboot-implementation/course-springboot.repository.impl';
 import { ProductSpringBootRepositoryImpl } from './core/infrastructure/repositories/springboot-implementation/product-springboot.repository.impl';
 import { UserLocalRepositoryImpl } from './core/infrastructure/repositories/local-implementation/user-local.repository.impl';
+import { CourseLocalRepositoryImpl } from './core/infrastructure/repositories/local-implementation/course-local.repository.impl';
 import { ProductLocalRepositoryImpl } from './core/infrastructure/repositories/local-implementation/product-local.repository.impl';
 
 /**
@@ -41,14 +45,17 @@ export const appConfig: ApplicationConfig = {
     //Local Providers
     { provide: UserRepository, useClass: UserLocalRepositoryImpl },
     { provide: ProductRepository, useClass: ProductLocalRepositoryImpl },
-    
+    { provide: CourseRepository, useClass: CourseLocalRepositoryImpl },
+
     //Node Providers
     //{ provide: UserRepository, useClass: UserNodeRepositoryImpl },
     //{ provide: ProductRepository, useClass: ProductNodeRepositoryImpl },
+    //{ provide: CourseRepository, useClass: CourseNodeRepositoryImpl },
 
     //SpringBoot Providers
     //{ provide: UserRepository, useClass: UserSpringBootRepositoryImpl },
     //{ provide: ProductRepository, useClass: ProductSpringBootRepositoryImpl },
+    //{ provide: CourseRepository, useClass: CourseSpringBootRepositoryImpl },
 
     /**
      * Proveedor de listeners globales de errores del navegador.
@@ -81,5 +88,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     provideHttpClient(),
-  ]
+  ],
 };

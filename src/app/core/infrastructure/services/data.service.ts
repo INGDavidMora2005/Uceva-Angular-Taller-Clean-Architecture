@@ -5,6 +5,7 @@ import { Observable, of } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { Product, ProductCategory } from "../../domain/models/product.model";
 import { User, UserEngineering } from "../../domain/models/user.model";
+import { Course, CourseFaculty } from "../../domain/models/course.model";
 
 /**
  * Servicio de infraestructura para obtención de datos.
@@ -16,6 +17,7 @@ import { User, UserEngineering } from "../../domain/models/user.model";
  *
  * - Datos locales simulados (mocks)
  * - Backend Node.js mediante HTTP
+ * - Backend SpringBoot mediante HTTP
  *
  * ❗ No contiene lógica de negocio.
  * ❗ No debe ser consumido directamente por los casos de uso.
@@ -50,7 +52,9 @@ export class DataService {
      */
     private springBootUrl = `${environment.baseUrlSpringBoot}/api`;
 
-
+    // ---------------------------------------------------------------------
+    // Métodos de usuarios
+    // ---------------------------------------------------------------------
     /**
      * Obtiene el listado de USUARIOS desde datos locales simulados.
      *
@@ -154,6 +158,9 @@ export class DataService {
         return this.httpClient.get<Product[]>(`${this.nodeUrl}/products/${countProducts}`);
     }
 
+    // ---------------------------------------------------------------------
+    // Métodos de usuarios (SpringBoot)
+    // ---------------------------------------------------------------------
     /**
      * Obtiene el listado de usuarios desde el backend SpringBoot.
      *
@@ -178,6 +185,9 @@ export class DataService {
         return this.httpClient.get<User[]>(`${this.springBootUrl}/users/${countUsers}`);
     }
 
+    // ---------------------------------------------------------------------
+    // Métodos de productos (SpringBoot)
+    // ---------------------------------------------------------------------
     /**
      * Obtiene el listado de productos desde el backend SpringBoot.
      *
@@ -199,4 +209,67 @@ export class DataService {
         return this.httpClient.get<Product[]>(`${this.springBootUrl}/products/${countProducts}`);
     }
 
+    // ---------------------------------------------------------------------
+    // Métodos de cursos locales, Node.js y SpringBoot
+    // ---------------------------------------------------------------------
+    /**
+     * Obtiene el listado de cursos desde datos locales simulados.
+     *
+     * @param countCourses - Cantidad de cursos a solicitar
+     * @returns Observable que emite un arreglo de {@link Course}
+     */
+    getAllCoursesLocal(countCourses: number): Observable<Course[]> {
+        const courses: Course[] = [];
+        const courseFaculties: CourseFaculty[] = [
+            'Ingenieria',
+            'Ciencias',
+            'Administracion',
+            'Derecho'
+        ];
+        const courseNames: string[] = [
+            'Programación Orientada a Objetos',
+            'Bases de Datos',
+            'Cálculo Diferencial',
+            'Estructuras de Datos',
+            'Redes de Computadores',
+            'Arquitectura de Software',
+            'Algebra Lineal',
+            'Fisión Mecánica',
+            'Contabilidad Basica',
+            'Derecho Constitucional',
+            'Estadistica',
+            'Ingenieria de Requisitos'
+        ];
+
+        for (let i = 1; i <= countCourses; i++) {
+            courses.push({
+                id: i,
+                name: faker.helpers.arrayElement(courseNames),
+                credits: faker.number.int({ min: 1, max: 6 }),
+                teacher: faker.person.fullName(),
+                faculty: faker.helpers.arrayElement(courseFaculties)
+            });
+        }
+        return of(courses);
+    }
+
+    /**
+     * Obtiene el listado de cursos desde el backend Node.js.
+     *
+     * @param countCourses - Cantidad de cursos a solicitar
+     * @returns Observable que emite un arreglo de {@link Course}
+     */
+    getAllCoursesNode(countCourses: number): Observable<Course[]> {
+        return this.httpClient.get<Course[]>(`${this.nodeUrl}/courses/${countCourses}`);
+    }
+
+    /**
+     * Obtiene el listado de cursos desde el backend SpringBoot.
+     *
+     * @param countCourses - Cantidad de cursos a solicitar
+     * @returns Observable que emite un arreglo de {@link Course}
+     */
+    getAllCoursesSpringBoot(countCourses: number): Observable<Course[]> {
+        return this.httpClient.get<Course[]>(`${this.springBootUrl}/courses/${countCourses}`);
+    }
 }
