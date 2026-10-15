@@ -5,10 +5,12 @@ import { environment } from '../../../../environments/environment';
 import { Product } from '../../domain/models/product.model';
 import { User } from '../../domain/models/user.model';
 import { Course } from '../../domain/models/course.model';
+import { Order } from '../../domain/models/order.model';
 import { DataService } from './data.service';
 import { USERS_MOCK } from '../../../mocks/users.mocks';
 import { PRODUCTS_MOCK } from '../../../mocks/products.mocks';
 import { COURSES_MOCK } from '../../../mocks/courses.mocks';
+import { ORDERS_MOCK } from '../../../mocks/orders.mocks';
 
 jest.mock('@faker-js/faker', () => ({
   faker: {
@@ -27,6 +29,9 @@ jest.mock('@faker-js/faker', () => ({
     internet: {
       email: jest.fn(() => 'test@mail.com'),
     },
+    date: {
+      recent: jest.fn(() => new Date('2026-01-15T10:00:00.000Z')),
+    },
     helpers: {
       arrayElement: jest.fn((arr) => arr[0]),
     },
@@ -40,6 +45,7 @@ describe('DataService', () => {
   const countUsers = 5;
   const countProducts = 5;
   const countCourses = 5;
+  const countOrders = 5;
   const pathUrlNode = `${environment.baseUrlNode}/api`;
   const pathUrlSpringBoot = `${environment.baseUrlSpringBoot}/api`;
 
@@ -151,6 +157,41 @@ describe('DataService', () => {
     const req = httpMock.expectOne(`${pathUrlSpringBoot}/courses/${countCourses}`);
     expect(req.request.method).toBe('GET');
     req.flush(COURSES_MOCK);
+  });
+
+  // --- Orders locale ---
+  it('debe devolver el listado de pedidos locale', (done) => {
+    service.getAllOrdersLocal(countOrders).subscribe((orders) => {
+      expect(orders.length).toEqual(countOrders);
+      orders.forEach((o) => {
+        expect(o).toHaveProperty('id');
+        expect(o).toHaveProperty('customer');
+        expect(o).toHaveProperty('total');
+        expect(o).toHaveProperty('createdAt');
+        expect(o).toHaveProperty('status');
+      });
+      done();
+    });
+  });
+
+  // --- Orders Node ---
+  it('debe obtener pedidos desde Node por HTTP', () => {
+    service.getAllOrdersNode(countOrders).subscribe((orders) => {
+      expect(orders).toEqual(ORDERS_MOCK);
+    });
+    const req = httpMock.expectOne(`${pathUrlNode}/orders/${countOrders}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(ORDERS_MOCK);
+  });
+
+  // --- Orders SpringBoot ---
+  it('debe obtener pedidos desde SpringBoot por HTTP', () => {
+    service.getAllOrdersSpringBoot(countOrders).subscribe((orders) => {
+      expect(orders).toEqual(ORDERS_MOCK);
+    });
+    const req = httpMock.expectOne(`${pathUrlSpringBoot}/orders/${countOrders}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(ORDERS_MOCK);
   });
 
 });
