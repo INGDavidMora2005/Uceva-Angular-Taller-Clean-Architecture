@@ -6,6 +6,7 @@ import { environment } from "../../../../environments/environment";
 import { Product, ProductCategory } from "../../domain/models/product.model";
 import { User, UserEngineering } from "../../domain/models/user.model";
 import { Course, CourseFaculty } from "../../domain/models/course.model";
+import { Order, OrderStatus } from "../../domain/models/order.model";
 
 /**
  * Servicio de infraestructura para obtención de datos.
@@ -271,5 +272,55 @@ export class DataService {
      */
     getAllCoursesSpringBoot(countCourses: number): Observable<Course[]> {
         return this.httpClient.get<Course[]>(`${this.springBootUrl}/courses/${countCourses}`);
+    }
+
+    // ---------------------------------------------------------------------
+    // Métodos de pedidos locales, Node.js y SpringBoot
+    // ---------------------------------------------------------------------
+    /**
+     * Obtiene el listado de pedidos desde datos locales simulados.
+     *
+     * @param countOrders - Cantidad de pedidos a solicitar
+     * @returns Observable que emite un arreglo de {@link Order}
+     */
+    getAllOrdersLocal(countOrders: number): Observable<Order[]> {
+        const orders: Order[] = [];
+        const statuses: OrderStatus[] = [
+            'Pendiente',
+            'Enviado',
+            'Entregado',
+            'Cancelado'
+        ];
+
+        for (let i = 1; i <= countOrders; i++) {
+            orders.push({
+                id: i,
+                customer: faker.person.fullName(),
+                total: faker.number.int({ min: 10000, max: 500000 }),
+                createdAt: faker.date.recent({ days: 30 }).toISOString(),
+                status: faker.helpers.arrayElement(statuses)
+            });
+        }
+        return of(orders);
+    }
+
+    /**
+     * Obtiene el listado de pedidos desde el backend Node.js.
+     *
+     * @param countOrders - Cantidad de pedidos a solicitar
+     * @returns Observable que emite un arreglo de {@link Order}
+     */
+    getAllOrdersNode(countOrders: number): Observable<Order[]> {
+        return this.httpClient.get<Order[]>(`${this.nodeUrl}/orders/${countOrders}`);
+    }
+
+    /**
+     * Obtiene el listado de pedidos desde el backend SpringBoot.
+     *
+     * @param countOrders - Cantidad de pedidos a solicitar
+     * @returns Observable que emite un arreglo de {@link Order}
+     */
+    getAllOrdersSpringBoot(countOrders: number): Observable<Order[]> {
+        return this.httpClient.get<Order[]>(`${this.springBootUrl}/orders/${countOrders}`);
     }
 }

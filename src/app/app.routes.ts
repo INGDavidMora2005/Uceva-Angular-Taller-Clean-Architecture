@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { UsersPage } from './presentation/pages/users/users.page';
 import { ProductsPage } from './presentation/pages/products/products.page';
 import { CoursesPage } from './presentation/pages/courses/courses.page';
+import { OrdersPage } from './presentation/pages/orders/orders.page';
 
 /**
  * Definición de las rutas principales de la aplicación.
@@ -18,6 +19,7 @@ import { CoursesPage } from './presentation/pages/courses/courses.page';
  * @see {@link UsersPage}
  * @see {@link ProductsPage}
  * @see {@link CoursesPage}
+ * @see {@link OrdersPage}
  */
 export const routes: Routes = [
 
@@ -47,6 +49,15 @@ export const routes: Routes = [
    * de mostrar y gestionar el listado de cursos.
    */
   { path: 'courses', component: CoursesPage },
+
+  /**
+   * Ruta de pedidos.
+   *
+   * @remarks
+   * Renderiza el componente `OrdersPage`, encargado
+   * de mostrar y gestionar el listado de pedidos.
+   */
+  { path: 'orders', component: OrdersPage },
 
   /**
    * Ruta comodín.
