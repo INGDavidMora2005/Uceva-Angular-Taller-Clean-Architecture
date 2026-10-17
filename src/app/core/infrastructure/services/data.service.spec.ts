@@ -6,11 +6,13 @@ import { Product } from '../../domain/models/product.model';
 import { User } from '../../domain/models/user.model';
 import { Course } from '../../domain/models/course.model';
 import { Order } from '../../domain/models/order.model';
+import { Book } from '../../domain/models/book.model';
 import { DataService } from './data.service';
 import { USERS_MOCK } from '../../../mocks/users.mocks';
 import { PRODUCTS_MOCK } from '../../../mocks/products.mocks';
 import { COURSES_MOCK } from '../../../mocks/courses.mocks';
 import { ORDERS_MOCK } from '../../../mocks/orders.mocks';
+import { BOOKS_MOCK } from '../../../mocks/books.mocks';
 
 jest.mock('@faker-js/faker', () => ({
   faker: {
@@ -46,6 +48,7 @@ describe('DataService', () => {
   const countProducts = 5;
   const countCourses = 5;
   const countOrders = 5;
+  const countBooks = 5;
   const pathUrlNode = `${environment.baseUrlNode}/api`;
   const pathUrlSpringBoot = `${environment.baseUrlSpringBoot}/api`;
 
@@ -192,6 +195,41 @@ describe('DataService', () => {
     const req = httpMock.expectOne(`${pathUrlSpringBoot}/orders/${countOrders}`);
     expect(req.request.method).toBe('GET');
     req.flush(ORDERS_MOCK);
+  });
+
+  // --- Books locale ---
+  it('debe devolver el listado de libros locale', (done) => {
+    service.getAllBooksLocal(countBooks).subscribe((books: Book[]) => {
+      expect(books.length).toEqual(countBooks);
+      books.forEach((b) => {
+        expect(b).toHaveProperty('id');
+        expect(b).toHaveProperty('title');
+        expect(b).toHaveProperty('author');
+        expect(b).toHaveProperty('year');
+        expect(b).toHaveProperty('genre');
+      });
+      done();
+    });
+  });
+
+  // --- Books Node ---
+  it('debe obtener libros desde Node por HTTP', () => {
+    service.getAllBooksNode(countBooks).subscribe((books) => {
+      expect(books).toEqual(BOOKS_MOCK);
+    });
+    const req = httpMock.expectOne(`${pathUrlNode}/books/${countBooks}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(BOOKS_MOCK);
+  });
+
+  // --- Books SpringBoot ---
+  it('debe obtener libros desde SpringBoot por HTTP', () => {
+    service.getAllBooksSpringBoot(countBooks).subscribe((books) => {
+      expect(books).toEqual(BOOKS_MOCK);
+    });
+    const req = httpMock.expectOne(`${pathUrlSpringBoot}/books/${countBooks}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(BOOKS_MOCK);
   });
 
 });
