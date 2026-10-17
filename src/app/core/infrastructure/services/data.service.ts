@@ -7,6 +7,7 @@ import { Product, ProductCategory } from "../../domain/models/product.model";
 import { User, UserEngineering } from "../../domain/models/user.model";
 import { Course, CourseFaculty } from "../../domain/models/course.model";
 import { Order, OrderStatus } from "../../domain/models/order.model";
+import { Book, BookGenre } from "../../domain/models/book.model";
 
 /**
  * Servicio de infraestructura para obtención de datos.
@@ -322,5 +323,69 @@ export class DataService {
      */
     getAllOrdersSpringBoot(countOrders: number): Observable<Order[]> {
         return this.httpClient.get<Order[]>(`${this.springBootUrl}/orders/${countOrders}`);
+    }
+
+    // ---------------------------------------------------------------------
+    // Métodos de libros locales, Node.js y SpringBoot
+    // ---------------------------------------------------------------------
+    /**
+     * Obtiene el listado de libros desde datos locales simulados.
+     *
+     * @param countBooks - Cantidad de libros a solicitar
+     * @returns Observable que emite un arreglo de {@link Book}
+     */
+    getAllBooksLocal(countBooks: number): Observable<Book[]> {
+        const books: Book[] = [];
+        const genres: BookGenre[] = [
+            'Novela',
+            'Ciencia',
+            'Historia',
+            'Tecnologia'
+        ];
+        const bookTitles: string[] = [
+            'Cien años de soledad',
+            'Clean Architecture',
+            'Breve historia del tiempo',
+            'El Quijote',
+            'Sapiens',
+            'Código limpio',
+            'La peste',
+            'Cosmos',
+            'Los miserables',
+            'Estructuras de datos y algoritmos',
+            'Historia de Colombia',
+            'El origen de las especies'
+        ];
+
+        for (let i = 1; i <= countBooks; i++) {
+            books.push({
+                id: i,
+                title: faker.helpers.arrayElement(bookTitles),
+                author: faker.person.fullName(),
+                year: faker.number.int({ min: 1950, max: 2025 }),
+                genre: faker.helpers.arrayElement(genres)
+            });
+        }
+        return of(books);
+    }
+
+    /**
+     * Obtiene el listado de libros desde el backend Node.js.
+     *
+     * @param countBooks - Cantidad de libros a solicitar
+     * @returns Observable que emite un arreglo de {@link Book}
+     */
+    getAllBooksNode(countBooks: number): Observable<Book[]> {
+        return this.httpClient.get<Book[]>(`${this.nodeUrl}/books/${countBooks}`);
+    }
+
+    /**
+     * Obtiene el listado de libros desde el backend SpringBoot.
+     *
+     * @param countBooks - Cantidad de libros a solicitar
+     * @returns Observable que emite un arreglo de {@link Book}
+     */
+    getAllBooksSpringBoot(countBooks: number): Observable<Book[]> {
+        return this.httpClient.get<Book[]>(`${this.springBootUrl}/books/${countBooks}`);
     }
 }
