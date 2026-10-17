@@ -3,6 +3,7 @@ import { UsersPage } from './presentation/pages/users/users.page';
 import { ProductsPage } from './presentation/pages/products/products.page';
 import { CoursesPage } from './presentation/pages/courses/courses.page';
 import { OrdersPage } from './presentation/pages/orders/orders.page';
+import { BooksPage } from './presentation/pages/books/books.page';
 
 /**
  * Definición de las rutas principales de la aplicación.
@@ -20,6 +21,7 @@ import { OrdersPage } from './presentation/pages/orders/orders.page';
  * @see {@link ProductsPage}
  * @see {@link CoursesPage}
  * @see {@link OrdersPage}
+ * @see {@link BooksPage}
  */
 export const routes: Routes = [
 
@@ -58,6 +60,15 @@ export const routes: Routes = [
    * de mostrar y gestionar el listado de pedidos.
    */
   { path: 'orders', component: OrdersPage },
+
+  /**
+   * Ruta de libros.
+   *
+   * @remarks
+   * Renderiza el componente `BooksPage`, encargado
+   * de mostrar y gestionar el listado de libros.
+   */
+  { path: 'books', component: BooksPage },
 
   /**
    * Ruta comodín.
